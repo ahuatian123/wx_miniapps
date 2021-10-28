@@ -8,6 +8,7 @@ Page({
    */
   data: {
     goodsObj: {},
+    isCollect: false
   },
   GoodsInfo: {},
   /**
@@ -28,13 +29,18 @@ Page({
       }
     })
     this.GoodsInfo = goodsObj
+    // 1 获取商品详情数组
+    let collect = wx.getStorageSync('collect') || []
+    // 2 判断当前商品是否被收藏
+    let isCollect = collect.some(v => v.goods_id === this.GoodsInfo.goods_id)
     this.setData({
       goodsObj: {
         goods_name: goodsObj.goods_name,
         goods_price: goodsObj.goods_price,
         goods_introduce: goodsObj.goods_introduce.replace(/\.webp/g, '.jpg'),
         pics: goodsObj.pics
-      }
+      },
+      isCollect
     })
   },
   // 点击轮播图 放大预览
@@ -69,6 +75,39 @@ Page({
       title: '加入成功',
       icon: 'success',
       mask: true
+    })
+  },
+  // 点击 商品收藏图标
+  handleCollect() {
+    // 1 改变图标颜色
+    let isCollect = !this.data.isCollect
+    console.log(isCollect);
+    // 2 获取缓存中商品收藏数组
+    let collect = wx.getStorageSync('collect') || []
+    // 3 判断该商品是不是被收藏过
+    let index = collect.findIndex(v => v.goods_id === this.GoodsInfo.goods_id)
+    if (index !== -1) {
+      // 能找到已经收藏的 在数组中删除
+      collect.splice(index, 1)
+      wx.showToast({
+        title: '取消成功',
+        icon: 'success',
+        mask: true,
+      })
+    } else {
+      // 没有收藏过
+      collect.push(this.GoodsInfo)
+      wx.showToast({
+        title: '收藏成功',
+        icon: 'success',
+        mask: true,
+      })
+    }
+    // 4 把数组存入缓存中
+    wx.setStorageSync('collect', collect)
+    // 5 修改data属性
+    this.setData({
+      isCollect
     })
   }
 })

@@ -80,7 +80,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
     // 判断是否已存在缓存数据
     const Cates = wx.getStorageSync('Cates')
     if (!Cates) {
