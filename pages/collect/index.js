@@ -4,6 +4,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    collect: [],
     tabs: [{
         id: 0,
         value: '商品收藏',
@@ -27,6 +28,12 @@ Page({
     ],
   },
 
+  onShow() {
+    const collect = wx.getStorageSync('collect') || []
+    this.setData({
+      collect
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
