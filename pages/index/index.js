@@ -56,6 +56,12 @@ Page({
     request({
       url: '/home/floordata'
     }).then(result => {
+      // 修改navigator_url
+      result.forEach(v => {
+        v.product_list.forEach(v1 => {
+          v1['navigator_url'] = v1['navigator_url'].replace('?', '/index?')
+        })
+      })
       this.setData({
         floorList: result
       })
